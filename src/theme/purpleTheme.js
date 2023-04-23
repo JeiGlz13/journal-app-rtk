@@ -1,20 +1,22 @@
 import { createTheme } from "@mui/material";
-import { red, blue, orange } from "@mui/material/colors";
+import { red, green, deepOrange } from "@mui/material/colors";
 
 export const purpleTheme = createTheme({
   palette: {
     primary: {
-      main: blue[700],
-      light: blue[500],
-      dark: blue[900],
+      main: green[400],
+      light: green[200],
+      dark: green[600],
     },
     secondary: {
-      main: orange[400],
-      light: orange[200],
-      dark: orange[600],
+      main: deepOrange[400],
+      light: deepOrange[200],
+      dark: deepOrange[600],
     },
     error: {
-      main: red.A400,
+      main: red[500],
+      light: red[300],
+      dark: red[700],
     },
   },
 });

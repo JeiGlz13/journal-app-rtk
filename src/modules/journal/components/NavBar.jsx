@@ -25,14 +25,23 @@ export const NavBar = ({ drawerWidth = 240 }) => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography variant="h6" noWrap component="div">
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ color: "white" }}
+          >
             {" "}
             JournalApp{" "}
           </Typography>
 
           <IconButton
             sx={{
-              backgroundColor: "error.main",
+              backgroundColor: "secondary.main",
+
+              "&:hover": {
+                backgroundColor: "secondary.dark",
+              },
             }}
           >
             <LogoutOutlined sx={{ color: "white" }} />
