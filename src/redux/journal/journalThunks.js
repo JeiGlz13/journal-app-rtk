@@ -5,8 +5,12 @@ import {
   isCreatingNewNote,
   setActiveNote,
   setNotes,
+  setPhotosToActiveNote,
+  setSaving,
+  updateNote,
 } from "./journalSlice";
 import { loadNotes } from "../../helpers/loadNotes";
+import { fileUpload } from "../../helpers/fileUpload";
 
 export const startNewNote = () => {
   return async (dispatch, getState) => {
@@ -16,6 +20,7 @@ export const startNewNote = () => {
       title: "",
       body: "",
       date: new Date().getTime(),
+      imageURLs: [],
       uid,
     };
 
@@ -36,5 +41,29 @@ export const startLoadingNotes = () => {
     if (!uid) throw new Error("El UID no existe");
     const notes = await loadNotes(uid);
     dispatch(setNotes(notes));
+  };
+};
+
+export const startSaveNote = () => {
+  return async (dispatch, getState) => {
+    dispatch(setSaving());
+    const { activeNote } = getState().journal;
+
+    const { id, ...noteToFirestore } = activeNote;
+    const docRef = doc(firebaseDB, `notes/${id}`);
+    await setDoc(docRef, noteToFirestore, { merge: true });
+    dispatch(updateNote(activeNote));
+  };
+};
+
+export const startUploadingFiles = (files = []) => {
+  return async (dispatch) => {
+    dispatch(setSaving());
+    const filesURLs = await Promise.all(
+      Object.values(files).map(async (file) => await fileUpload(file))
+    );
+
+    console.log(filesURLs);
+    dispatch(setPhotosToActiveNote(filesURLs));
   };
 };
