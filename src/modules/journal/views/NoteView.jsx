@@ -9,7 +9,11 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { SaveOutlined, UploadFileOutlined } from "@mui/icons-material";
+import {
+  DeleteOutline,
+  SaveOutlined,
+  UploadFileOutlined,
+} from "@mui/icons-material";
 
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
@@ -21,6 +25,7 @@ import { setActiveNote } from "../../../redux/journal/journalSlice";
 import {
   startSaveNote,
   startUploadingFiles,
+  startDeletingNote,
 } from "../../../redux/journal/journalThunks";
 
 export const NoteView = () => {
@@ -57,6 +62,10 @@ export const NoteView = () => {
   const onFileInputChange = ({ target }) => {
     if (target.files.legth === 0) return;
     dispatch(startUploadingFiles(target.files));
+  };
+
+  const onDelete = () => {
+    dispatch(startDeletingNote(activeNote.id));
   };
 
   return (
@@ -110,7 +119,7 @@ export const NoteView = () => {
       <Grid container>
         <TextField
           type="text"
-          variant="filled"
+          variant="outlined"
           fullWidth
           placeholder="Ingrese un título"
           label="Título"
@@ -122,7 +131,7 @@ export const NoteView = () => {
 
         <TextField
           type="text"
-          variant="filled"
+          variant="outlined"
           fullWidth
           multiline
           name="body"
@@ -133,8 +142,20 @@ export const NoteView = () => {
         />
       </Grid>
 
+      <Grid container justifyContent="end">
+        <Button
+          variant="contained"
+          color="error"
+          startIcon={<DeleteOutline />}
+          onClick={onDelete}
+          sx={{ mt: 2 }}
+        >
+          Borrar
+        </Button>
+      </Grid>
+
       {/* Image gallery */}
-      <ImageGallery />
+      <ImageGallery images={activeNote.imageURLs} />
     </Grid>
   );
 };
