@@ -4,7 +4,8 @@ import {
   getDocs,
   query,
   where,
-} from "firebase/firestore/lite";
+  onSnapshot,
+} from "firebase/firestore";
 import { firebaseDB } from "../firebase/config";
 
 export const loadNotes = async (uid = "") => {
@@ -15,6 +16,12 @@ export const loadNotes = async (uid = "") => {
     id: doc.id,
     ...doc.data(),
   }));
+  // let notes = [];
+  // onSnapshot(queryRef, docsSnap => {
+  //   docsSnap.forEach(doc => {
+  //     notes.push({ id: doc.id, ...doc.data() });
+  //   })
+  // });
 
   return notes;
 };

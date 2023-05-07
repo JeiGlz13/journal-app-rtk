@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, setDoc } from "firebase/firestore/lite";
+import { collection, deleteDoc, doc, onSnapshot, query, setDoc, where } from "firebase/firestore";
 import { firebaseDB } from "../../firebase/config";
 import {
   addNewEmptyNote,
@@ -10,8 +10,8 @@ import {
   setSaving,
   updateNote,
 } from "./journalSlice";
-import { loadNotes } from "../../helpers/loadNotes";
 import { fileUpload } from "../../helpers/fileUpload";
+// import { loadNotes } from "../../helpers/loadNotes";
 
 export const startNewNote = () => {
   return async (dispatch, getState) => {
@@ -40,8 +40,18 @@ export const startLoadingNotes = () => {
   return async (dispatch, getState) => {
     const { uid } = getState().auth;
     if (!uid) throw new Error("El UID no existe");
-    const notes = await loadNotes(uid);
-    dispatch(setNotes(notes));
+    // const notes = await loadNotes(uid);
+
+    const collectionRef = collection(firebaseDB, "notes");
+    const queryRef = query(collectionRef, where("uid", "==", uid));
+    onSnapshot(queryRef, docsSnap => {
+      let notes = [];
+      docsSnap.forEach(doc => {
+        notes.push({ id: doc.id, ...doc.data() });
+      });
+
+      dispatch(setNotes(notes));
+    });
   };
 };
 
